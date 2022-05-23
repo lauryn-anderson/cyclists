@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # Local apps
     'accounts',
+    'cyclists',
 ]
 
 MIDDLEWARE = [
