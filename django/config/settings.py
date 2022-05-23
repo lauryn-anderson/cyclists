@@ -42,16 +42,13 @@ INSTALLED_APPS = [
 
     # Local apps
     'accounts',
-    'cyclists',
+    'api',
+    'pages',
 
     # Third-party apps
     'rest_framework',
     'rest_framework.authtoken',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     'dj_rest_auth',
-    # 'dj_rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -69,7 +66,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [str(BASE_DIR.joinpath('templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
