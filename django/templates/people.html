@@ -1,0 +1,26 @@
+{% extends '_base.html' %}
+
+{% block title %}People{% endblock title %}
+
+{% block page_content %}
+<h1>People</h1>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Nationality</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for person in people %}
+    <tr>
+      <td><a href="{% url 'person' person.pk %}">{{ person }}</a></td>
+      <td><img src="{{ person.nationality.flag }}" alt="Flag of {{ person.nationality.name }}"> {{ person.nationality.name }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock page_content %}
