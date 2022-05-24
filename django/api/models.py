@@ -41,12 +41,17 @@ class Discipline(BaseModel):
 class Race(BaseModel):
 
     name = models.CharField(max_length=100)
-    nicknames = models.CharField('Nickname(s)', max_length=200)
+    nicknames = models.CharField('Nickname(s)', max_length=200, blank=True)
+    pronunciation = models.CharField(max_length=100, blank=True)
     start_year = models.PositiveSmallIntegerField('Start Year', null=True, blank=True)
     website = models.URLField(blank=True)
     notes = models.TextField(blank=True)
+    country = CountryField(blank=True)
     discipline = models.ForeignKey(
         Discipline, related_name='races', on_delete=models.SET_NULL, null=True)
+
+    def age(self):
+        return get_age(self.start_year)
 
     def __str__(self):
         return self.name
@@ -56,8 +61,8 @@ class Edition(BaseModel):
 
     race = models.ForeignKey(Race, related_name='editions', on_delete=models.CASCADE)
     year = models.PositiveSmallIntegerField('Year')
-    start_date = models.DateField('Start Date', blank=True)
-    end_date = models.DateField('End Date', blank=True)
+    start_date = models.DateField('Start Date', null=True, blank=True)
+    end_date = models.DateField('End Date', null=True, blank=True)
     start_location = models.CharField('Start Location', max_length=200, blank=True)
     end_location = models.CharField('End Location', max_length=200, blank=True)
     distance = models.FloatField('Distance (km)', blank=True)
@@ -71,7 +76,7 @@ class Stage(BaseModel):
 
     edition = models.ForeignKey(Edition, related_name='stages', on_delete=models.CASCADE)
     number = models.PositiveSmallIntegerField('Stage Number')
-    date = models.DateField('Start Date', blank=True)
+    date = models.DateField('Start Date', null=True, blank=True)
     start_location = models.CharField('Start Location', max_length=200, blank=True)
     end_location = models.CharField('End Location', max_length=200, blank=True)
     distance = models.FloatField('Distance (km)', blank=True)
@@ -106,6 +111,9 @@ class Team(BaseModel):
     def name(self):
         return TeamName.objects.filter(team=self).order_by('-start_date').first()
 
+    def age(self):
+        return get_age(self.start_year)
+
     def __str__(self):
         self.name().__str__()
 
@@ -117,8 +125,8 @@ class TeamName(BaseModel):
     abbreviation = models.CharField(max_length=10)
     nicknames = models.CharField('Nickname(s)', max_length=200)
     notes = models.TextField(blank=True)
-    start_date = models.DateField(blank=True)
-    end_date = models.DateField(blank=True)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -128,6 +136,7 @@ class Person(BaseModel):
 
     full_name = models.CharField('Full Name', max_length=100, blank=True)
     preferred_name = models.CharField('Preferred Name', max_length=100)
+    pronunciation = models.CharField(max_length=100, blank=True)
     nicknames = models.CharField('Nickname(s)', max_length=200, blank=True)
     birthdate = models.DateField(null=True, blank=True)
     nationality = CountryField(null=True, blank=True)
@@ -141,21 +150,7 @@ class Person(BaseModel):
         return self.preferred_name
 
     def age(self):
-        if self.birthdate is not None:
-            today = datetime.date.today()
-            years = today.year - self.birthdate.year
-            if today.month > self.birthdate.month:
-                # birthday has happened this year
-                return years
-            if today.month < self.birthdate.month:
-                # birthday has not happened yet
-                return years - 1
-            if today.day >= self.birthdate.day:
-                # birthday has happened/is today
-                return years
-            else:
-                # birthday has not happened yet
-                return years - 1
+        return get_age(self.birthdate)
 
     races = models.ManyToManyField(
         Edition,
@@ -214,3 +209,26 @@ class Contract(BaseModel):
     start_date = models.DateField('Start Date', null=True, blank=True)
     end_date = models.DateField('End Date', null=True, blank=True)
     notes = models.TextField(blank=True)
+
+
+def get_age(birthdate):
+    if birthdate is not None:
+        today = datetime.date.today()
+        if hasattr(birthdate, 'year'):
+            # datetime
+            years = today.year - birthdate.year
+            if today.month > birthdate.month:
+                # birthday has happened this year
+                return years
+            if today.month < birthdate.month:
+                # birthday has not happened yet
+                return years - 1
+            if today.day >= birthdate.day:
+                # birthday has happened/is today
+                return years
+            else:
+                # birthday has not happened yet
+                return years - 1
+        else:
+            # integer (year)
+            return today.year - birthdate.year

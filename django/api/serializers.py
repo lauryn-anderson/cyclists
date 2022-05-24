@@ -23,7 +23,7 @@ class RaceSerializer(serializers.ModelSerializer):
         model = Race
         fields = (
             'id', 'name', 'nicknames', 'start_year', 'website', 'discipline',
-            'notes',
+            'notes', 'country',
         )
 
 

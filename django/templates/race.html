@@ -1,0 +1,39 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ race }}{% endblock title %}
+
+{% block page_content %}
+<h1>{{ race }}</h1>
+
+{% if race.nicknames %}
+<p>Nicknames: {{ race.nicknames }}</p>
+{% endif %}
+{% if race.start_year %}
+<p>Start year: {{ race.start_year }} ({{ race.age }} years old)</p>
+{% endif %}
+{% if race.country %}
+<p>Country: <img src="{{ race.country.flag }}" alt="Flag of {{ race.country.name }}"> {{ race.country.name }}</p>
+{% endif %}
+{% if race.notes %}
+<p>{{ race.notes }}</p>
+{% endif %}
+{% if race.website %}
+<p>{{ race.website }}</p>
+{% endif %}
+<p>
+  {% if person.instagram %}<a href="https://www.instagram.com/{{ person.instagram }}">Instagram</a> {% endif %}
+  {% if person.twitter %}<a href="https://twitter.com/{{ person.twitter }}">Twitter</a> {% endif %}
+  {% if person.strava %}<a href="https://www.strava.com/pros/{{ person.strava }}">Strava</a> {% endif %}
+</p>
+
+{% if race.editions.all %}
+<p>Editions</p>
+<ul>
+  {% for edition in race.editions.all %}
+  <li><a href="{% url 'edition' edition.pk %}">{{ edition }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<p><a href="{% url 'races' %}">Back to Races</a></p>
+{% endblock page_content %}

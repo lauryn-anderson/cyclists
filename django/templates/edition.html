@@ -1,0 +1,29 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ edition }}{% endblock title %}
+
+{% block page_content %}
+<h1>{{ edition }}</h1>
+
+{% if edition.start_date %}
+<p>{{ edition.start_date }}
+  {% if edition.end_date %}
+  –{{ edition.end_date}}
+  {% endif %}
+</p>
+{% endif %}
+{% if edition.notes %}
+<p>{{ edition.notes }}</p>
+{% endif %}
+
+{% if edition.stages.all %}
+<p>Stages</p>
+<ul>
+  {% for stage in edition.stages.all %}
+  <li><a href="{% url 'stage' stage.pk %}">{{ stage }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<p><a href="{% url 'races' %}">Back to Races</a></p>
+{% endblock page_content %}

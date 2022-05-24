@@ -1,0 +1,24 @@
+{% extends '_base.html' %}
+
+{% block title %}Races{% endblock title %}
+
+{% block page_content %}
+<h1>Races</h1>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for race in races %}
+    <tr>
+      <td><a href="{% url 'race' race.pk %}">{{ race }}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock page_content %}

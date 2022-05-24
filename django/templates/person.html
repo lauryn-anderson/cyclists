@@ -1,6 +1,6 @@
 {% extends '_base.html' %}
 
-{% block title %}Home{% endblock title %}
+{% block title %}{{ person }}{% endblock title %}
 
 {% block page_content %}
 <h1>{{ person }}</h1>
@@ -17,11 +17,14 @@
 {% if person.nationality %}
 <p>Nationality: <img src="{{ person.nationality.flag }}" alt="Flag of {{ person.nationality.name }}"> {{ person.nationality.name }}</p>
 {% endif %}
+{% if person.notes %}
+<p>{{ person.notes }}</p>
+{% endif %}
 <p>
   {% if person.instagram %}<a href="https://www.instagram.com/{{ person.instagram }}">Instagram</a> {% endif %}
   {% if person.twitter %}<a href="https://twitter.com/{{ person.twitter }}">Twitter</a> {% endif %}
   {% if person.strava %}<a href="https://www.strava.com/pros/{{ person.strava }}">Strava</a> {% endif %}
 </p>
 
-<p><a href="{% url 'people' %}"></a></p>
+<p><a href="{% url 'people' %}">Back to People</a></p>
 {% endblock page_content %}
