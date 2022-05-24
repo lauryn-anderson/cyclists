@@ -11,6 +11,8 @@ dj-rest-auth = "~=2.2.4"
 django-allauth = "~=0.50.0"
 django-countries = "~=7.3.2"
 environs = {version = "~=9.5.0", extras = ["django"]}
+whitenoise = "~=6.1.0"
+gunicorn = "~=20.1.0"
 
 [dev-packages]
 
